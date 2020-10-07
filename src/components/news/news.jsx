@@ -1,12 +1,35 @@
-import React from 'react';
-import './news.styles.css';
-import {Card} from './news-card';
+import React,{Component} from 'react';
+import {Card} from './components/News/news-card';
+class News extends Component{
+    constructor(){
+        super()
 
-export const News = (props)=>{
+        this.state = {
+            news=[]
+        }
+    };
+
+    async componentDidMount()
+  {
+    const url = 'https://yahoo-finance15.p.rapidapi.com/api/yahoo/ne/news/AAPL';
+    const response = await fetch(url,{
+      method:'GET',
+      headers : new Headers({
+        'Content-type': 'application/json',
+        'x-rapidapi-host': 'yahoo-finance15.p.rapidapi.com',
+        'x-rapidapi-key': 'e1575a1859msh964b4f514104d3ap1db78ejsne4a6db7f8793'
+      })
+    });
+    const data = await response.json();
+    this.setState({news: data.item})
+  }
+  render()
+  {
     return(
-        <div className="news">
-            <div>{props.news.map(info => (<Card info={info} />))}
-            </div>
-        </div>
+      <div className="App">
+        <h1>News Feed</h1>
+        <Card news={this.state.news}/>
+      </div>
     )
+  }
 }
